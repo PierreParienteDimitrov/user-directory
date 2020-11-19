@@ -9,6 +9,7 @@ class DataArea extends Component {
 	state = {
 		users: users,
 		filteredUsers: users,
+		order: 'ascend',
 	};
 
 	// componentDidMount() {
@@ -36,17 +37,44 @@ class DataArea extends Component {
 
 	// FILTER
 	handleFilterChange = () => {
-		const firstNameArr = [];
+		const toSearch = [...this.state.users];
 
-		this.state.users.map((user) => {
-			return firstNameArr.push(user.name.first);
+		if (this.state.order === 'ascend') {
+			this.setState({ order: 'descend' });
+		} else {
+			this.setState({ order: 'ascend' });
+		}
+
+		const sorted = toSearch.sort((a, b) => {
+			const nameA = a.name.first.toLocaleLowerCase();
+			const nameB = b.name.first.toLocaleLowerCase();
+
+			if (nameA < nameB) {
+				if (this.state.order === 'ascend') {
+					return 1;
+				} else {
+					return -1;
+				}
+			}
+			if (nameA > nameB) {
+				if (this.state.order === 'ascend') {
+					return -1;
+				} else {
+					return 1;
+				}
+			}
+			return 0;
 		});
 
-		// console.log(firstNameArr);
+		this.setState({ filteredUsers: sorted });
+	};
 
-		const sorted = firstNameArr.sort();
-
-		console.log(sorted);
+	chevronHandler = () => {
+		if (this.state.order === 'ascend') {
+			return <i class="fas fa-chevron-down"></i>;
+		} else {
+			return <i class="fas fa-chevron-up"></i>;
+		}
 	};
 
 	render() {
@@ -65,7 +93,7 @@ class DataArea extends Component {
 									thumbnail
 								</th>
 								<th scope="col" onClick={this.handleFilterChange}>
-									First Name
+									First Name {this.chevronHandler()}
 								</th>
 								<th scope="col">Last Name</th>
 								<th scope="col">Email</th>
