@@ -20,17 +20,33 @@ class DataArea extends Component {
 	// 	});
 	// }
 
+	// SEARCH
 	handleSearchChange = (event) => {
 		// console.log(event);
 		const searched = event.target.value.toLowerCase().trim();
 		// console.log(searched);
 
 		const filtered = this.state.users.filter((user) => {
-			return user.name.first.toLowerCase() === searched;
+			return user.name.first.toLowerCase().match(searched);
 		});
 
 		console.log(filtered);
 		this.setState({ filteredUsers: filtered });
+	};
+
+	// FILTER
+	handleFilterChange = () => {
+		const firstNameArr = [];
+
+		this.state.users.map((user) => {
+			return firstNameArr.push(user.name.first);
+		});
+
+		// console.log(firstNameArr);
+
+		const sorted = firstNameArr.sort();
+
+		console.log(sorted);
 	};
 
 	render() {
@@ -48,7 +64,9 @@ class DataArea extends Component {
 								<th scope="col" style={{ width: '10%' }}>
 									thumbnail
 								</th>
-								<th scope="col">First Name</th>
+								<th scope="col" onClick={this.handleFilterChange}>
+									First Name
+								</th>
 								<th scope="col">Last Name</th>
 								<th scope="col">Email</th>
 								<th scope="col">City</th>
